@@ -49,30 +49,32 @@ class KuCoinPairUpdaterThread(threading.Thread):
         self.kucoin_pair.parse_info(self._parser.grab())
 
     def update_gui(self):
-        self.gui_model_dict['update_time'].setText(self.kucoin_pair.pair_pool['time'])
-        self.gui_model_dict['pair_name'].setText(self.kucoin_pair.pair_pool['pair_codes_vars']['converted'])
-        self.gui_model_dict['price'].setText(self.kucoin_pair.pair_pool['price'])
-        self.gui_model_dict['volume'].setText(self.kucoin_pair.pair_pool['volume'])
-        self.gui_model_dict['high'].setText(self.kucoin_pair.pair_pool['high'])
-        self.gui_model_dict['low'].setText(self.kucoin_pair.pair_pool['low'])
+        gui_dict = self.gui_model_dict
+        pair_dict = self.kucoin_pair.pair_pool
 
-        self.gui_model_dict['buy_table'].setRowCount(len(self.kucoin_pair.pair_pool['orders']['buy']))
-        self.gui_model_dict['buy_table'].setColumnCount(2)
+        update_dict = ['time', 'price', 'volume', 'high', 'low']
+        for name in update_dict:
+            gui_dict[name].setText(pair_dict[name])
+        gui_dict['pair_name'].setText('🔗' + pair_dict['pair_codes_vars']['converted'])
 
-        for i, row in enumerate(self.kucoin_pair.pair_pool['orders']['buy']):
-            to_insert = [list(self.kucoin_pair.pair_pool['orders']['buy'].keys())[i],
-                         self.kucoin_pair.pair_pool['orders']['buy'][row]]
-            for a, col in enumerate(to_insert):
-                self.gui_model_dict['buy_table'].setItem(i, a, QTableWidgetItem(col))
+        for table_name in ['sell', 'buy']:
+            pair_table = pair_dict['orders'][table_name]
+            gui_table = gui_dict[table_name]
 
-        self.gui_model_dict['sell_table'].setRowCount(len(self.kucoin_pair.pair_pool['orders']['sell']))
-        self.gui_model_dict['sell_table'].setColumnCount(2)
+            if pair_table:
+                gui_table.setRowCount(len(pair_table))
+                gui_table.setColumnCount(2)
+                for i, row in enumerate(pair_table):
+                    to_insert = [list(pair_table.keys())[i],
+                                 pair_table[row]]
+                    for a, col in enumerate(to_insert):
+                        gui_table.setItem(i, a, QTableWidgetItem(col))
+            else:
+                # ¯\_(ツ)_/¯
+                gui_table.setRowCount(1)
+                gui_table.setColumnCount(1)
+                gui_table.setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))
 
-        for i, row in enumerate(self.kucoin_pair.pair_pool['orders']['sell']):
-            to_insert = [list(self.kucoin_pair.pair_pool['orders']['sell'].keys())[i],
-                         self.kucoin_pair.pair_pool['orders']['sell'][row]]
-            for a, col in enumerate(to_insert):
-                self.gui_model_dict['sell_table'].setItem(i, a, QTableWidgetItem(col))
 
     def set_paused(self):
         self.paused = True
@@ -105,53 +107,47 @@ class TradeOgrePairUpdaterThread(threading.Thread):
 
         self.api = api_models.TradeOgreApi(self.session)
         self.tradeogre_pair = pair_models.PairModel(self.model_name)
-        self._parser = api_parser.TradeOgreGrabber(self.pair_code,  self.session, self.api)
+        self._parser = api_parser.TradeOgreGrabber(self.pair_code, self.session, self.api)
 
     def update_pair_model(self):
         self.tradeogre_pair.parse_info(self._parser.grab())
 
     def update_gui(self):
-        self.gui_model_dict['buy_table'].setRowCount(0)
-        self.gui_model_dict['sell_table'].setRowCount(0)
-        self.gui_model_dict['buy_table'].setColumnCount(2)
-        self.gui_model_dict['sell_table'].setColumnCount(2)
+        gui_dict = self.gui_model_dict
+        pair_dict = self.tradeogre_pair.pair_pool
 
-        self.gui_model_dict['update_time'].setText(self.tradeogre_pair.pair_pool['time'])
-        self.gui_model_dict['pair_name'].setText(self.tradeogre_pair.pair_pool['pair_codes_vars']['converted'])
-        self.gui_model_dict['price'].setText(self.tradeogre_pair.pair_pool['price'])
-        self.gui_model_dict['volume'].setText(self.tradeogre_pair.pair_pool['volume'])
-        self.gui_model_dict['high'].setText(self.tradeogre_pair.pair_pool['high'])
-        self.gui_model_dict['low'].setText(self.tradeogre_pair.pair_pool['low'])
+        update_dict = ['time', 'price', 'volume', 'high', 'low']
+        for name in update_dict:
+            gui_dict[name].setText(pair_dict[name])
 
-        if self.tradeogre_pair.pair_pool['orders']['buy']:
-            self.gui_model_dict['buy_table'].setRowCount(len(self.tradeogre_pair.pair_pool['orders']['buy']))
-            self.gui_model_dict['buy_table'].setColumnCount(2)
-            # ¯\_(ツ)_/¯
-            for i, row in enumerate(self.tradeogre_pair.pair_pool['orders']['buy']):
-                to_insert = [list(self.tradeogre_pair.pair_pool['orders']['buy'].keys())[i],
-                             self.tradeogre_pair.pair_pool['orders']['buy'][row]]
-                for a, col in enumerate(to_insert):
-                    self.gui_model_dict['buy_table'].setItem(i, a, QTableWidgetItem(col))
-        else:
-            self.gui_model_dict['buy_table'].setRowCount(1)
-            self.gui_model_dict['buy_table'].setColumnCount(1)
-            self.gui_model_dict['buy_table'].setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))
+        gui_dict['pair_name'].setText('🔗' + pair_dict['pair_codes_vars']['converted'])
 
+        for table_name in ['sell', 'buy']:
+            pair_table = pair_dict['orders'][table_name]
+            gui_table = gui_dict[table_name]
 
-        if self.tradeogre_pair.pair_pool['orders']['sell']:
+            if pair_table:
+                gui_table.setRowCount(len(pair_table))
+                gui_table.setColumnCount(2)
+                # ¯\_(ツ)_/¯
+                for i, row in enumerate(pair_table):
+                    to_insert = [list(pair_table.keys())[i],
+                                 pair_table[row]]
+                    for a, col in enumerate(to_insert):
+                        gui_table.setItem(i, a, QTableWidgetItem(col))
+            else:
+                gui_table.setRowCount(1)
+                gui_table.setColumnCount(1)
+                gui_table.setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))
 
-            self.gui_model_dict['sell_table'].setRowCount(len(self.tradeogre_pair.pair_pool['orders']['sell']))
-            self.gui_model_dict['sell_table'].setColumnCount(2)
+    def set_paused(self):
+        self.paused = True
 
-            for i, row in enumerate(self.tradeogre_pair.pair_pool['orders']['sell']):
-                to_insert = [list(self.tradeogre_pair.pair_pool['orders']['sell'].keys())[i],
-                             self.tradeogre_pair.pair_pool['orders']['sell'][row]]
-                for a, col in enumerate(to_insert):
-                    self.gui_model_dict['sell_table'].setItem(i, a, QTableWidgetItem(col))
-        else:
-            self.gui_model_dict['sell_table'].setRowCount(1)
-            self.gui_model_dict['sell_table'].setColumnCount(1)
-            self.gui_model_dict['sell_table'].setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))
+    def set_resumed(self):
+        self.paused = False
+
+    def set_pause_time(self, pause_time):
+        self.pause_time(pause_time)
 
     def run(self):
         while True:

@@ -51,3 +51,6 @@ class KucoinApi:
     def get_markets(self):
         markets = self.client.get_markets()
         return markets
+
+    def check_keys(self):
+        pass

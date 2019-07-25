@@ -43,6 +43,7 @@ class PairModel:
             self.pair_pool['low'] = info_dict['24h_info']['low']
 
             if info_dict['orders']:
+                
                 for ask in info_dict['orders']['asks']:
                     if self.pair_pool['pair_reversed']:
                         self.pair_pool['orders']['buy'][ask[1]] = ask[0]

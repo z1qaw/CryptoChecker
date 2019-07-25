@@ -13,7 +13,7 @@ class KucoinGrabber:
 
     def grab(self):
         info_dict = {
-            'time': time.strftime("%d.%m %H:%M:%S", time.gmtime()),
+            'time': time.strftime("%d.%m %H:%M:%S", time.localtime()),
             '24h_info': self.api.client.get_24hr_stats(self.pair),
             'orders': self.api.client.get_order_book(self.pair)
             }
@@ -27,7 +27,7 @@ class TradeOgreGrabber:
 
     def grab(self):
         info_dict = {
-            'time': time.strftime("%d.%m %H:%M:%S", time.gmtime()),
+            'time': time.strftime("%d.%m %H:%M:%S", time.localtime()),
             '24h_info': self.api.get_market_currency(self.pair),
             'orders': self.api.get_order_book(self.pair)
             }
