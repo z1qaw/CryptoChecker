@@ -1,6 +1,7 @@
 import threading
 import os
 import time
+import logging
 
 from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
 

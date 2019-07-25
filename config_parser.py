@@ -9,6 +9,8 @@ class Config:
         self.config_dict = None
         self.default_config_dict = {
             'window': {
+                'log_to_console': True,
+                'log_to_file': False,
                 'autoupdate': False,
                 'update_time': 10,
                 'pin': False,
@@ -47,8 +49,9 @@ class Config:
         }
 
         if not os.path.isfile(self.filename):
+
             with open(self.filename, 'w') as file:
-                file.write(str(self.default_config_dict).replace('\'', '\"').replace('False', 'false').replace('True', 'true').replace('None', 'null'))
+                file.write(json.dumps(self.default_config_dict, sort_keys=True, indent=4))
 
     def parse_config(self):
         with open(self.filename, 'r') as file:
@@ -56,4 +59,4 @@ class Config:
 
     def save_to_file(self):
         with open(self.filename, 'w') as file:
-            file.write(str(self.config_dict))
+            file.write(json.dumps(self.config_dict, sort_keys=True, indent=4))
