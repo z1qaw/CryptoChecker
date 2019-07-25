@@ -1,11 +1,13 @@
 import sys
 import requests
 
-import gui
+import main_gui
 import multithreads
 import config_parser
 
 from PyQt5 import QtWidgets
+
+import settings_gui
 
 
 def init_threads_list(requests_session, config, window):
@@ -41,17 +43,33 @@ def init_threads_list(requests_session, config, window):
                                                   )
         threads.append(this_thread)
 
-    helper = update_helper_thread(threads, False, 10)
+    helper = update_helper_thread(threads, False, conf['window']['update_time'])
     helper.start_threads()
 
 
 def main():
+    ui_elements = []
+
     config = config_parser.Config('settings.json')
     config.parse_config()
     requests_session = requests.session()
+    settings_dict = config.config_dict
+
+    if settings_dict['proxy']['active']:
+        requests_session.proxies = {
+            'http': '{0}://{1}:{2}'.format(
+                    settings_dict['proxy']['type'],
+                    settings_dict['proxy']['host'],
+                    settings_dict['proxy']['port']
+            )
+        }
 
     app = QtWidgets.QApplication(sys.argv)
-    main_window = gui.MainApp()
+    main_window = main_gui.MainApp()
+
+    settings_window = settings_gui.SettingsApp()
+    ui_elements.append(settings_window)
+
     main_window.show()
 
     init_threads_list(requests_session, config, main_window)

@@ -23,7 +23,7 @@ class PairModel:
 
     def convert_pair_code(self, pair_code):
         main = ['BTC', 'ETH', 'KCS', 'USD', 'NEO']
-        if re.findall('\w+\-\w', pair_code):
+        if re.findall('\w+-\w', pair_code):
             found_codes = re.findall('\w+', pair_code)
             self.pair_pool['pair_codes_vars']['original'] = pair_code
             if len(found_codes) == 2:

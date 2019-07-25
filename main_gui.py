@@ -1,10 +1,6 @@
-import sys
-import webbrowser
-
 import design
 
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import pyqtSlot
 
 
 class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):

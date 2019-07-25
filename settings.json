@@ -34,10 +34,10 @@
         }
     },
     "proxy": {
-        "active": false,
-        "host": null,
-        "port": null,
-        "type": null
+        "active": true,
+        "host": "127.0.0.1",
+        "port": "9050",
+        "type": "socks5"
     },
     "window": {
         "autoupdate": false,

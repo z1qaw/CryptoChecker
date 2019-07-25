@@ -1,9 +1,7 @@
 import threading
-import os
 import time
-import logging
 
-from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem
 
 import api_models
 import pair_models
@@ -52,12 +50,12 @@ class KuCoinPairUpdaterThread(threading.Thread):
     def update_gui(self):
         gui_dict = self.gui_model_dict
         pair_dict = self.kucoin_pair.pair_pool
-
+        print(1)
         update_dict = ['time', 'price', 'volume', 'high', 'low']
         for name in update_dict:
             gui_dict[name].setText(pair_dict[name])
         gui_dict['pair_name'].setText('🔗' + pair_dict['pair_codes_vars']['converted'])
-
+        print(1)
         for table_name in ['sell', 'buy']:
             pair_table = pair_dict['orders'][table_name]
             gui_table = gui_dict[table_name]
