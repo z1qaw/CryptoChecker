@@ -1,5 +1,6 @@
 import re
 
+
 class PairModel:
     def __init__(self, pair_name):
         self.pair_pool = {
@@ -25,7 +26,7 @@ class PairModel:
         if re.findall('\w+\-\w', pair_code):
             found_codes = re.findall('\w+', pair_code)
             self.pair_pool['pair_codes_vars']['original'] = pair_code
-            if (len(found_codes) == 2):
+            if len(found_codes) == 2:
                 if (found_codes[0] in main) and (found_codes[1] not in main):
                     found_codes.reverse()
                     self.pair_pool['pair_reversed'] = True
@@ -43,7 +44,7 @@ class PairModel:
             self.pair_pool['low'] = info_dict['24h_info']['low']
 
             if info_dict['orders']:
-                
+
                 for ask in info_dict['orders']['asks']:
                     if self.pair_pool['pair_reversed']:
                         self.pair_pool['orders']['buy'][ask[1]] = ask[0]

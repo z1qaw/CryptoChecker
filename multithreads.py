@@ -3,7 +3,7 @@ import os
 import time
 import logging
 
-from PyQt5.QtWidgets import QTableWidget,QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem
 
 import api_models
 import pair_models
@@ -33,18 +33,18 @@ class KuCoinPairUpdaterThread(threading.Thread):
     def __init__(self, requests_session, pair_code, kucoin_auth_dict, gui_model_dict, pause_time):
         super(KuCoinPairUpdaterThread, self).__init__()
         self.setDaemon(True)
-        self.pause_time = 10
-        self.paused = False
-        self.model_name = 'KuCoin'
+
         self.session = requests_session
         self.pair_code = pair_code
         self.kucoin_auth_dict = kucoin_auth_dict
         self.gui_model_dict = gui_model_dict
+        self.pause_time = pause_time
+        self.paused = False
+        self.model_name = 'KuCoin'
 
-        self.api = api_models.KucoinApi(self.session, self.kucoin_auth_dict)
+        self.api = api_models.KucoinApi(self.kucoin_auth_dict)
         self.kucoin_pair = pair_models.PairModel(self.model_name)
         self._parser = api_parser.KucoinGrabber(self.pair_code, self.session, self.kucoin_auth_dict, self.api)
-
 
     def update_pair_model(self):
         self.kucoin_pair.parse_info(self._parser.grab())
@@ -76,7 +76,6 @@ class KuCoinPairUpdaterThread(threading.Thread):
                 gui_table.setColumnCount(1)
                 gui_table.setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))
 
-
     def set_paused(self):
         self.paused = True
 
@@ -84,7 +83,7 @@ class KuCoinPairUpdaterThread(threading.Thread):
         self.paused = False
 
     def set_pause_time(self, pause_time):
-        self.pause_time(pause_time)
+        self.pause_time = pause_time
 
     def run(self):
         while True:
@@ -104,7 +103,7 @@ class TradeOgrePairUpdaterThread(threading.Thread):
         self.session = requests_session
         self.pair_code = pair_code
         self.gui_model_dict = gui_model_dict
-        self.pause_time = 10
+        self.pause_time = pause_time
 
         self.api = api_models.TradeOgreApi(self.session)
         self.tradeogre_pair = pair_models.PairModel(self.model_name)
@@ -148,7 +147,7 @@ class TradeOgrePairUpdaterThread(threading.Thread):
         self.paused = False
 
     def set_pause_time(self, pause_time):
-        self.pause_time(pause_time)
+        self.pause_time = pause_time
 
     def run(self):
         while True:

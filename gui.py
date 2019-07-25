@@ -5,8 +5,6 @@ import design
 
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot
-from PyQt5.QtCore import Qt, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QApplication, QDialog, QLabel, QMessageBox
 
 
 class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
@@ -36,7 +34,7 @@ class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 'high': self.high1, 'high_converted': self.high_converted1,
                 'low': self.low1, 'low_converted': self.low_converted1,
                 'buy': self.buy_table1, 'sell': self.sell_table1
-                 },
+            },
             '1': {
                 'time': self.update_time2,
                 'pair_name': self.pair_name2,
@@ -45,7 +43,7 @@ class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 'high': self.high2, 'high_converted': self.high_converted2,
                 'low': self.low2, 'low_converted': self.low_converted2,
                 'buy': self.buy_table2, 'sell': self.sell_table2
-                 },
+            },
             '2': {
                 'time': self.update_time3,
                 'pair_name': self.pair_name3,
@@ -54,7 +52,7 @@ class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 'high': self.high3, 'high_converted': self.high_converted3,
                 'low': self.low3, 'low_converted': self.low_converted3,
                 'buy': self.buy_table3, 'sell': self.sell_table3
-                 },
+            },
             '3': {
                 'time': self.update_time4,
                 'pair_name': self.pair_name4,
@@ -63,10 +61,5 @@ class MainApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
                 'high': self.high4, 'high_converted': self.high_converted4,
                 'low': self.low4, 'low_converted': self.low_converted4,
                 'buy': self.buy_table4, 'sell': self.sell_table4
-                 }
+            }
         }
-
-
-    @pyqtSlot()
-    def pair_on_click(self, link):
-        webbrowser.open(link)

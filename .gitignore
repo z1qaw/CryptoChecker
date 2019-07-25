@@ -128,3 +128,5 @@ dmypy.json
 
 # This project
 _settings.py
+settings.json
+.gitignore

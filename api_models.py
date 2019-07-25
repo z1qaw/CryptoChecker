@@ -7,9 +7,8 @@ class TradeOgreApi:
         self.api_uri = 'https://tradeogre.com/api/v1'
         self.session = requests_session
 
-
     def get_markets(self):
-        '''Return Markets in JSON format.'''
+        """Return Markets in JSON format."""
         this_uri = self.api_uri + '/markets'
         answer = requests.get(this_uri)
         return answer.json()
@@ -40,8 +39,9 @@ class TradeOgreApi:
         answer = requests.get(this_uri)
         return answer.json()
 
+
 class KucoinApi:
-    def __init__(self, requests_session, auth):
+    def __init__(self, auth):
         self.api_uri = 'https://openapi-sandbox.kucoin.com'
         self.api_key = auth['api_key']
         self.api_secret = auth['api_secret']

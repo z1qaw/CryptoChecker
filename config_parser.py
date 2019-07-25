@@ -1,4 +1,3 @@
-import re
 import os
 import json
 
@@ -33,9 +32,9 @@ class Config:
             'api': {
                 'kucoin': {
                     'keys': {
-                        'api_key': '5d2bba3e134ab759f6130eee',
-                        'api_secret': 'b572e0a1-6c19-4c87-afe6-ce41d4e3a468',
-                        'api_passphrase': 'FFFFFFFDSFDSFD'
+                        'api_key': '',
+                        'api_secret': '',
+                        'api_passphrase': ''
                     },
                     'valid': False
                 }
