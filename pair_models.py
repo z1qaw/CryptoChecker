@@ -15,6 +15,7 @@ class PairModel:
             'volume': None,
             'high': None,
             'low': None,
+            'pair_uri': None,
             'orders': {
                 'buy': {},
                 'sell': {}

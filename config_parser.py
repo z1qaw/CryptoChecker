@@ -6,18 +6,19 @@ class Config:
     def __init__(self, filename):
         self.filename = filename
         self.config_dict = None
+
         self.default_config_dict = {
             'window': {
-                'log_to_console': True,
-                'log_to_file': False,
-                'autoupdate': False,
-                'update_time': 10,
                 'pin': False,
                 'toolbar': True,
+                'window_title': True,
                 'dark': False,
-                'opacity': 100
+                'opacity': 100,
+                'orders': False
             },
             'pairs': {
+                'autoupdate': False,
+                'update_time': 10,
                 'box1': {
                     'exchange': 'KuCoin',
                     'pair_code1': {'code': 'TRTL-BTC', 'exists': True},
@@ -48,7 +49,6 @@ class Config:
         }
 
         if not os.path.isfile(self.filename):
-
             with open(self.filename, 'w') as file:
                 file.write(json.dumps(self.default_config_dict, sort_keys=True, indent=4))
 

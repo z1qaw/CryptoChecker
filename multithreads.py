@@ -1,7 +1,9 @@
 import threading
 import time
+import webbrowser
 
 from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtCore import pyqtSlot
 
 import api_models
 import pair_models
@@ -26,12 +28,19 @@ class UpdateHelper():
         for thread in self.threads_list:
             thread.pause_time = pause_time
 
+    def update(self):
+        for thread in self.threads_list:
+            thread.update()
+        print('updated')
+
 
 class KuCoinPairUpdaterThread(threading.Thread):
-    def __init__(self, requests_session, pair_code, kucoin_auth_dict, gui_model_dict, pause_time):
+    def __init__(self, requests_session, window, pair_code, kucoin_auth_dict, gui_model_dict, box_num, pause_time):
         super(KuCoinPairUpdaterThread, self).__init__()
         self.setDaemon(True)
 
+        self.window = window
+        self.box_num = box_num
         self.session = requests_session
         self.pair_code = pair_code
         self.kucoin_auth_dict = kucoin_auth_dict
@@ -50,12 +59,13 @@ class KuCoinPairUpdaterThread(threading.Thread):
     def update_gui(self):
         gui_dict = self.gui_model_dict
         pair_dict = self.kucoin_pair.pair_pool
-        print(1)
         update_dict = ['time', 'price', 'volume', 'high', 'low']
+
         for name in update_dict:
             gui_dict[name].setText(pair_dict[name])
-        gui_dict['pair_name'].setText('🔗' + pair_dict['pair_codes_vars']['converted'])
-        print(1)
+
+        gui_dict['pair_name'].setText(pair_dict['pair_codes_vars']['converted'])
+
         for table_name in ['sell', 'buy']:
             pair_table = pair_dict['orders'][table_name]
             gui_table = gui_dict[table_name]
@@ -83,19 +93,24 @@ class KuCoinPairUpdaterThread(threading.Thread):
     def set_pause_time(self, pause_time):
         self.pause_time = pause_time
 
+    def update(self):
+        self.update_pair_model()
+        self.update_gui()
+
     def run(self):
         while True:
             if not self.paused:
-                self.update_pair_model()
-                self.update_gui()
+                self.update()
             time.sleep(self.pause_time)
 
 
 class TradeOgrePairUpdaterThread(threading.Thread):
-    def __init__(self, requests_session, pair_code, gui_model_dict, pause_time):
+    def __init__(self, requests_session, window, pair_code, gui_model_dict, box_num, pause_time):
         super(TradeOgrePairUpdaterThread, self).__init__()
         self.setDaemon(True)
 
+        self.window = window
+        self.box_num = box_num
         self.paused = False
         self.model_name = 'TradeOgre'
         self.session = requests_session
@@ -110,6 +125,9 @@ class TradeOgrePairUpdaterThread(threading.Thread):
     def update_pair_model(self):
         self.tradeogre_pair.parse_info(self._parser.grab())
 
+    def prr(self):
+        print('aaaa')
+
     def update_gui(self):
         gui_dict = self.gui_model_dict
         pair_dict = self.tradeogre_pair.pair_pool
@@ -118,7 +136,7 @@ class TradeOgrePairUpdaterThread(threading.Thread):
         for name in update_dict:
             gui_dict[name].setText(pair_dict[name])
 
-        gui_dict['pair_name'].setText('🔗' + pair_dict['pair_codes_vars']['converted'])
+        gui_dict['pair_name'].setText(pair_dict['pair_codes_vars']['converted'])
 
         for table_name in ['sell', 'buy']:
             pair_table = pair_dict['orders'][table_name]
@@ -147,9 +165,12 @@ class TradeOgrePairUpdaterThread(threading.Thread):
     def set_pause_time(self, pause_time):
         self.pause_time = pause_time
 
+    def update(self):
+        self.update_pair_model()
+        self.update_gui()
+
     def run(self):
         while True:
             if not self.paused:
-                self.update_pair_model()
-                self.update_gui()
+                self.update()
             time.sleep(self.pause_time)

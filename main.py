@@ -1,3 +1,4 @@
+import os
 import sys
 import requests
 
@@ -17,39 +18,42 @@ def init_threads_list(requests_session, config, window):
     conf = config.config_dict
 
     threads_list = [[conf['pairs']['box1']['exchange'], conf['pairs']['box1']['pair_code1']['code'], '0',
-                     conf['window']['update_time']],
+                     conf['pairs']['update_time']],
                     [conf['pairs']['box1']['exchange'], conf['pairs']['box1']['pair_code2']['code'], '1',
-                     conf['window']['update_time']],
+                     conf['pairs']['update_time']],
                     [conf['pairs']['box2']['exchange'], conf['pairs']['box2']['pair_code1']['code'], '2',
-                     conf['window']['update_time']],
+                     conf['pairs']['update_time']],
                     [conf['pairs']['box2']['exchange'], conf['pairs']['box2']['pair_code2']['code'], '3',
-                     conf['window']['update_time']]]
+                     conf['pairs']['update_time']]]
 
     threads = []
     for thread in threads_list:
         this_thread = None
+        this_thread = kucoin_update_thread(requests_session,
+                                           window,
+                                           thread[1],
+                                           conf['api']['kucoin']['keys'],
+                                           window.pairs_elements[thread[2]],
+                                           thread[2],
+                                           thread[3]
+                                           )
         if thread[0] == 'KuCoin':
-            this_thread = kucoin_update_thread(requests_session,
-                                               thread[1],
-                                               conf['api']['kucoin']['keys'],
-                                               window.pairs_elements[thread[2]],
-                                               thread[3]
-                                               )
+            pass
         if thread[0] == 'TradeOgre':
             this_thread = tradeogre_update_thread(requests_session,
+                                                  window,
                                                   thread[1],
                                                   window.pairs_elements[thread[2]],
+                                                  thread[2],
                                                   thread[3]
                                                   )
         threads.append(this_thread)
 
-    helper = update_helper_thread(threads, False, conf['window']['update_time'])
+    helper = update_helper_thread(threads, False, conf['pairs']['update_time'])
     helper.start_threads()
 
 
 def main():
-    ui_elements = []
-
     config = config_parser.Config('settings.json')
     config.parse_config()
     requests_session = requests.session()
@@ -65,13 +69,16 @@ def main():
         }
 
     app = QtWidgets.QApplication(sys.argv)
-    main_window = main_gui.MainApp()
+    pairs = [{'pair': settings_dict['pairs']['box1']['pair_code1']['code'], 'exchange': settings_dict['pairs']['box1']['exchange']},
+             {'pair': settings_dict['pairs']['box1']['pair_code2']['code'], 'exchange': settings_dict['pairs']['box1']['exchange']},
+             {'pair': settings_dict['pairs']['box2']['pair_code1']['code'], 'exchange': settings_dict['pairs']['box2']['exchange']},
+             {'pair': settings_dict['pairs']['box2']['pair_code2']['code'], 'exchange': settings_dict['pairs']['box2']['exchange']},
+             ]
 
-    settings_window = settings_gui.SettingsApp()
-    ui_elements.append(settings_window)
-
+    main_window = main_gui.MainApp(settings_dict, pairs)
     main_window.show()
-
+    osCommandString = 'gedit settings.json'
+    os.system(osCommandString)
     init_threads_list(requests_session, config, main_window)
     app.exec_()
 
