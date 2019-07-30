@@ -62,26 +62,36 @@ def main():
     if settings_dict['proxy']['active']:
         requests_session.proxies = {
             'http': '{0}://{1}:{2}'.format(
-                    settings_dict['proxy']['type'],
-                    settings_dict['proxy']['host'],
-                    settings_dict['proxy']['port']
+                settings_dict['proxy']['type'],
+                settings_dict['proxy']['host'],
+                settings_dict['proxy']['port']
             )
         }
 
     app = QtWidgets.QApplication(sys.argv)
-    pairs = [{'pair': settings_dict['pairs']['box1']['pair_code1']['code'], 'exchange': settings_dict['pairs']['box1']['exchange']},
-             {'pair': settings_dict['pairs']['box1']['pair_code2']['code'], 'exchange': settings_dict['pairs']['box1']['exchange']},
-             {'pair': settings_dict['pairs']['box2']['pair_code1']['code'], 'exchange': settings_dict['pairs']['box2']['exchange']},
-             {'pair': settings_dict['pairs']['box2']['pair_code2']['code'], 'exchange': settings_dict['pairs']['box2']['exchange']},
+    pairs = [{'pair': settings_dict['pairs']['box1']['pair_code1']['code'],
+              'exchange': settings_dict['pairs']['box1']['exchange']},
+             {'pair': settings_dict['pairs']['box1']['pair_code2']['code'],
+              'exchange': settings_dict['pairs']['box1']['exchange']},
+             {'pair': settings_dict['pairs']['box2']['pair_code1']['code'],
+              'exchange': settings_dict['pairs']['box2']['exchange']},
+             {'pair': settings_dict['pairs']['box2']['pair_code2']['code'],
+              'exchange': settings_dict['pairs']['box2']['exchange']},
              ]
 
-    main_window = main_gui.MainApp(settings_dict, pairs)
-    main_window.show()
-    osCommandString = 'gedit settings.json'
-    os.system(osCommandString)
-    init_threads_list(requests_session, config, main_window)
-    app.exec_()
+    try:
+        main_window = main_gui.MainApp(settings_dict, pairs)
+        main_window.show()
+        init_threads_list(requests_session, config, main_window)
+        app.exec_()
+    except KeyboardInterrupt:
+        main_window.close()
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        with open('log.txt', 'w') as log_file:
+            log_file.write(e.message, '\n', e.args)
+            print('error writed to log.txt')

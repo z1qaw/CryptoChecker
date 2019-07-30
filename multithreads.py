@@ -31,7 +31,6 @@ class UpdateHelper():
     def update(self):
         for thread in self.threads_list:
             thread.update()
-        print('updated')
 
 
 class KuCoinPairUpdaterThread(threading.Thread):
@@ -63,6 +62,10 @@ class KuCoinPairUpdaterThread(threading.Thread):
 
         for name in update_dict:
             gui_dict[name].setText(pair_dict[name])
+
+        if pair_dict['to_btc']:
+            gui_dict['price_converted'].setVisible(True)
+            gui_dict['price_converted'].setText('({0} BTC)'.format(pair_dict['to_btc_price']))
 
         gui_dict['pair_name'].setText(pair_dict['pair_codes_vars']['converted'])
 
@@ -125,9 +128,6 @@ class TradeOgrePairUpdaterThread(threading.Thread):
     def update_pair_model(self):
         self.tradeogre_pair.parse_info(self._parser.grab())
 
-    def prr(self):
-        print('aaaa')
-
     def update_gui(self):
         gui_dict = self.gui_model_dict
         pair_dict = self.tradeogre_pair.pair_pool
@@ -135,6 +135,10 @@ class TradeOgrePairUpdaterThread(threading.Thread):
         update_dict = ['time', 'price', 'volume', 'high', 'low']
         for name in update_dict:
             gui_dict[name].setText(pair_dict[name])
+
+        if pair_dict['to_btc']:
+            gui_dict['price_converted'].setVisible(True)
+            gui_dict['price_converted'].setText('({0} BTC)'.format(pair_dict['to_btc_price']))
 
         gui_dict['pair_name'].setText(pair_dict['pair_codes_vars']['converted'])
 

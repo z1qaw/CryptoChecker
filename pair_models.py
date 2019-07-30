@@ -12,6 +12,8 @@ class PairModel:
             },
             'pair_reversed': False,
             'price': None,
+            'to_btc': None,
+            'to_btc_price': None,
             'volume': None,
             'high': None,
             'low': None,
@@ -23,7 +25,7 @@ class PairModel:
         }
 
     def convert_pair_code(self, pair_code):
-        main = ['BTC', 'ETH', 'KCS', 'USD', 'NEO']
+        main = ['BTC', 'ETH', 'KCS', 'USD', 'NEO', 'LTC']
         if re.findall('\w+-\w', pair_code):
             found_codes = re.findall('\w+', pair_code)
             self.pair_pool['pair_codes_vars']['original'] = pair_code
@@ -43,6 +45,9 @@ class PairModel:
             self.pair_pool['volume'] = info_dict['24h_info']['volValue']
             self.pair_pool['high'] = info_dict['24h_info']['high']
             self.pair_pool['low'] = info_dict['24h_info']['low']
+
+            self.pair_pool['to_btc'] = True if info_dict['to_btc'] else False
+            self.pair_pool['to_btc_price'] = info_dict['converted'] if self.pair_pool['to_btc'] else None
 
             if info_dict['orders']:
 
@@ -66,6 +71,9 @@ class PairModel:
             self.pair_pool['volume'] = info_dict['24h_info'][pair_name]['volume']
             self.pair_pool['high'] = info_dict['24h_info'][pair_name]['high']
             self.pair_pool['low'] = info_dict['24h_info'][pair_name]['low']
+
+            self.pair_pool['to_btc'] = True if info_dict['to_btc'] else False
+            self.pair_pool['to_btc_price'] = info_dict['converted'] if self.pair_pool['to_btc'] else None
 
             if info_dict['orders']:
                 self.pair_pool['orders']['buy'] = info_dict['orders']['buy']

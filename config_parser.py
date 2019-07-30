@@ -10,24 +10,21 @@ class Config:
         self.default_config_dict = {
             'window': {
                 'pin': False,
-                'toolbar': True,
-                'window_title': True,
-                'dark': False,
-                'opacity': 100,
-                'orders': False
+                'opacity': 1.0,
+                'orders': False,
+                'transparent': True
             },
             'pairs': {
-                'autoupdate': False,
                 'update_time': 10,
                 'box1': {
                     'exchange': 'KuCoin',
-                    'pair_code1': {'code': 'TRTL-BTC', 'exists': True},
-                    'pair_code2': {'code': 'TRTL-ETH', 'exists': True}
+                    'pair_code1': {'code': 'TRTL-BTC'},
+                    'pair_code2': {'code': 'TRTL-ETH'}
                 },
                 'box2': {
                     'exchange': 'TradeOgre',
-                    'pair_code1': {'code': 'LTC-TRTL', 'exists': True},
-                    'pair_code2': {'code': 'BTC-TRTL', 'exists': True}
+                    'pair_code1': {'code': 'LTC-TRTL'},
+                    'pair_code2': {'code': 'BTC-TRTL'}
                 }
             },
             'api': {
@@ -36,8 +33,7 @@ class Config:
                         'api_key': '',
                         'api_secret': '',
                         'api_passphrase': ''
-                    },
-                    'valid': False
+                    }
                 }
             },
             'proxy': {

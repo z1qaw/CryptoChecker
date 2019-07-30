@@ -1,3 +1,5 @@
+import os
+
 from PyQt5.QtCore import Qt
 
 import main_design
@@ -28,17 +30,20 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
             self.orders1, self.orders2, self.orders3, self.orders4
         ]
 
-        if not settings_dict['window']['toolbar']:
-            self.toolbar_widget.setVisible(False)
+        self.toolbar_widget.setVisible(False)
 
         if not settings_dict['window']['orders']:
             for el in orders:
                 el.setVisible(False)
 
+        if settings_dict['window']['transparent']:
+            self.setAttribute(Qt.WA_TranslucentBackground, True)
+
         if settings_dict['window']['pin']:
             self.setWindowFlags(QtCore.Qt.Window | Qt.WindowStaysOnTopHint)
 
         self.resize(self.minimumSize())
+        self.setWindowOpacity(settings_dict['window']['opacity'])
 
         self.pair_group1.setTitle(settings_dict['pairs']['box1']['exchange'] + ':')
         self.pair_group2.setTitle(settings_dict['pairs']['box2']['exchange'] + ':')
@@ -124,6 +129,9 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
         self.browser_button3.clicked.connect(self.link3_pressed)
         self.browser_button4.clicked.connect(self.link4_pressed)
 
+        self.actionOpen_settings_in_editor.triggered.connect(self.open_settings_in_editor)
+        self.actionReload_app.triggered.connect(self.reload_app)
+
     def link1_pressed(self):
         webbrowser.open_new_tab(self.link1)
 
@@ -135,3 +143,15 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
 
     def link4_pressed(self):
         webbrowser.open_new_tab(self.link4)
+
+    def open_settings_in_editor(self):
+        from sys import platform
+        if platform == "linux" or platform == "linux2":
+            osCommandString = 'gedit settings.json'
+            os.system(osCommandString)
+        elif platform == "win32":
+            osCommandString = 'notepad.exe settings.json'
+            os.system(osCommandString)
+
+    def reload_app(self):
+        self.close()
