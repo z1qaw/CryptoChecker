@@ -76,5 +76,5 @@ class PairModel:
             self.pair_pool['to_btc_price'] = info_dict['converted'] if self.pair_pool['to_btc'] else None
 
             if info_dict['orders']:
-                self.pair_pool['orders']['buy'] = info_dict['orders']['buy']
-                self.pair_pool['orders']['sell'] = info_dict['orders']['sell']
+                self.pair_pool['orders']['buy'] = info_dict['orders']['sell']
+                self.pair_pool['orders']['sell'] = (info_dict['orders']['buy'])

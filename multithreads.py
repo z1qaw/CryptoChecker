@@ -146,17 +146,19 @@ class TradeOgrePairUpdaterThread(threading.Thread):
 
         gui_dict['pair_name'].setText(pair_dict['pair_codes_vars']['converted'])
 
-        for table_name in ['sell', 'buy']:
+        for table_name in ['buy', 'sell']:
             pair_table = pair_dict['orders'][table_name]
             gui_table = gui_dict[table_name]
 
             if pair_table:
                 gui_table.setRowCount(len(pair_table))
                 gui_table.setColumnCount(2)
+                keys_list = list(pair_table.keys())
+                if table_name == 'sell':
+                    keys_list.reverse()
                 # ¯\_(ツ)_/¯
                 for i, row in enumerate(pair_table):
-                    to_insert = [list(pair_table.keys())[i],
-                                 pair_table[row]]
+                    to_insert = [keys_list[i], pair_table[keys_list[i]]]
                     for a, col in enumerate(to_insert):
                         gui_table.setItem(i, a, QTableWidgetItem(col))
             else:

@@ -48,7 +48,7 @@ class TradeOgreGrabber:
             curr = re.findall('\w+', self.pair)
             btc_curr = 'BTC-' + curr[0]
             btc_price = self.api.get_market_currency(btc_curr)[btc_curr]['price']
-            converted = nstr(mpf(info_dict['24h_info'][self.pair]['price']) * mpf(btc_price), 50)[:13]
+            converted = nstr(mpf(info_dict['24h_info'][self.pair]['price']) * mpf(btc_price), 50)[:11]
             info_dict['to_btc'] = True
             info_dict['converted'] = converted
 
