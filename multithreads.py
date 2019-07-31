@@ -1,9 +1,7 @@
 import threading
 import time
-import webbrowser
 
 from PyQt5.QtWidgets import QTableWidgetItem
-from PyQt5.QtCore import pyqtSlot
 
 import api_models
 import pair_models
@@ -126,7 +124,13 @@ class TradeOgrePairUpdaterThread(threading.Thread):
         self._parser = api_parser.TradeOgreGrabber(self.pair_code, self.session, self.api)
 
     def update_pair_model(self):
-        self.tradeogre_pair.parse_info(self._parser.grab())
+        try:
+            self.tradeogre_pair.parse_info(self._parser.grab())
+        except (TypeError, AttributeError):
+            self.window.setStatusTip('Box #{0} (TradeOgre): pair {1} may be incorrected or not found.'.format(
+                str(self.box_num),
+                self.pair_code
+            ))
 
     def update_gui(self):
         gui_dict = self.gui_model_dict

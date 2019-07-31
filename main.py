@@ -1,4 +1,3 @@
-import os
 import sys
 import requests
 
@@ -7,8 +6,6 @@ import multithreads
 import config_parser
 
 from PyQt5 import QtWidgets
-
-import settings_gui
 
 
 def init_threads_list(requests_session, config, window):
@@ -28,7 +25,6 @@ def init_threads_list(requests_session, config, window):
 
     threads = []
     for thread in threads_list:
-        this_thread = None
         this_thread = kucoin_update_thread(requests_session,
                                            window,
                                            thread[1],
@@ -93,5 +89,5 @@ if __name__ == '__main__':
         main()
     except Exception as e:
         with open('log.txt', 'w') as log_file:
-            log_file.write(e.message, '\n', e.args)
+            log_file.write('\n' + str(e))
             print('error writed to log.txt')

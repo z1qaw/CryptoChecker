@@ -11,8 +11,8 @@ class Config:
             'window': {
                 'pin': False,
                 'opacity': 1.0,
-                'orders': False,
-                'transparent': True
+                'orders': True,
+                'transparent': False
             },
             'pairs': {
                 'update_time': 10,

@@ -1,0 +1,2 @@
+
+'QStatusBar' object is not callable

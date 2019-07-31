@@ -1,11 +1,20 @@
 import os
-
-from PyQt5.QtCore import Qt
+import webbrowser
 
 import main_design
 
-import webbrowser
+from PyQt5.QtCore import Qt
 from PyQt5 import QtWidgets, QtCore
+
+
+def open_settings_in_editor():
+    from sys import platform
+    if platform == "linux" or platform == "linux2":
+        osCommandString = 'gedit settings.json'
+        os.system(osCommandString)
+    elif platform == "win32":
+        osCommandString = 'notepad.exe settings.json'
+        os.system(osCommandString)
 
 
 class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
@@ -129,7 +138,7 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
         self.browser_button3.clicked.connect(self.link3_pressed)
         self.browser_button4.clicked.connect(self.link4_pressed)
 
-        self.actionOpen_settings_in_editor.triggered.connect(self.open_settings_in_editor)
+        self.actionOpen_settings_in_editor.triggered.connect(open_settings_in_editor)
         self.actionReload_app.triggered.connect(self.reload_app)
 
     def link1_pressed(self):
@@ -143,15 +152,6 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
 
     def link4_pressed(self):
         webbrowser.open_new_tab(self.link4)
-
-    def open_settings_in_editor(self):
-        from sys import platform
-        if platform == "linux" or platform == "linux2":
-            osCommandString = 'gedit settings.json'
-            os.system(osCommandString)
-        elif platform == "win32":
-            osCommandString = 'notepad.exe settings.json'
-            os.system(osCommandString)
 
     def reload_app(self):
         self.close()
