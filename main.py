@@ -76,7 +76,7 @@ def main():
              ]
 
     try:
-        main_window = main_gui.MainApp(settings_dict, pairs)
+        main_window = main_gui.MainApp(settings_dict, config, pairs)
         main_window.show()
         init_threads_list(requests_session, config, main_window)
         app.exec_()

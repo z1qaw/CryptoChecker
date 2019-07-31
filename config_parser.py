@@ -8,7 +8,11 @@ class Config:
         self.config_dict = None
 
         self.default_config_dict = {
+            'developer': {
+                'first_on_tray': True,
+            },
             'window': {
+                'tray': True,
                 'pin': False,
                 'opacity': 1.0,
                 'orders': True,

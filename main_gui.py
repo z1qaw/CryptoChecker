@@ -1,6 +1,9 @@
 import os
 import webbrowser
 
+from PyQt5.QtGui import QIcon
+from PyQt5.QtWidgets import QSystemTrayIcon, QAction, QMenu, qApp, QStyle
+
 import main_design
 
 from PyQt5.QtCore import Qt
@@ -18,9 +21,12 @@ def open_settings_in_editor():
 
 
 class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
-    def __init__(self, settings_dict, pairs_dict):
+    def __init__(self, settings_dict, config_sess, pairs_dict):
         super().__init__()
         self.setupUi(self)
+
+        self.settings_dict = settings_dict
+        self.config_sess = config_sess
 
         to_hide = [
             self.allert_symbol1, self.allert_symbol2, self.allert_symbol3,
@@ -141,6 +147,22 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
         self.actionOpen_settings_in_editor.triggered.connect(open_settings_in_editor)
         self.actionReload_app.triggered.connect(self.reload_app)
 
+        self.tray_icon = QSystemTrayIcon(self)
+        self.tray_icon.setIcon(QIcon("gui_icon.png"))
+
+        show_action = QAction("Show", self)
+        quit_action = QAction("Exit", self)
+        hide_action = QAction("Hide", self)
+        show_action.triggered.connect(self.show)
+        hide_action.triggered.connect(self.hide)
+        quit_action.triggered.connect(qApp.quit)
+        tray_menu = QMenu()
+        tray_menu.addAction(show_action)
+        tray_menu.addAction(hide_action)
+        tray_menu.addAction(quit_action)
+        self.tray_icon.setContextMenu(tray_menu)
+        self.tray_icon.show()
+
     def link1_pressed(self):
         webbrowser.open_new_tab(self.link1)
 
@@ -155,3 +177,18 @@ class MainApp(QtWidgets.QMainWindow, main_design.Ui_MainWindow):
 
     def reload_app(self):
         self.close()
+
+    def closeEvent(self, event):
+        if self.settings_dict['window']['tray']:
+            event.ignore()
+            self.hide()
+
+            if self.settings_dict['developer']['first_on_tray']:
+                self.tray_icon.showMessage(
+                    "CryptoChecker",
+                    "Application was minimized to tray",
+                    QSystemTrayIcon.Information,
+                    2000
+                )
+                self.config_sess.config_dict['developer']['first_on_tray'] = False
+                self.config_sess.save_to_file()
