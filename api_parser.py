@@ -3,6 +3,8 @@ import time
 
 from mpmath import mpf, nstr
 
+import api_models
+
 
 class KucoinGrabber:
     def __init__(self, pair, requests_session, auth, api):
@@ -45,11 +47,21 @@ class TradeOgreGrabber:
         }
 
         if not re.findall('BTC', self.pair):
+            kucoin_api = api_models.KucoinApi({'api_key': None,
+                                               'api_secret': None,
+                                               'api_passphrase': None})
+
             curr = re.findall('\w+', self.pair)
-            btc_curr = 'BTC-' + curr[0]
-            btc_price = self.api.get_market_currency(btc_curr)[btc_curr]['price']
+            btc_price = kucoin_api.client.get_24hr_stats(curr[0] + '-BTC')['last']
             converted = nstr(mpf(info_dict['24h_info'][self.pair]['price']) * mpf(btc_price), 50)[:13]
             info_dict['to_btc'] = True
             info_dict['converted'] = converted
+
+            # curr = re.findall('\w+', self.pair)
+            # btc_curr = 'BTC-' + curr[0]
+            # btc_price = self.api.get_market_currency(btc_curr)[btc_curr]['price']
+            # converted = nstr(mpf(info_dict['24h_info'][self.pair]['price']) * mpf(btc_price), 50)[:13]
+            # info_dict['to_btc'] = True
+            # info_dict['converted'] = converted
 
         return info_dict
