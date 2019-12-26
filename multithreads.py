@@ -1,11 +1,13 @@
 import threading
 import time
+import re
 
-from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem, QHeaderView, QAbstractScrollArea
 
 import api_models
 import pair_models
 import api_parser
+import extensions
 
 
 class UpdateHelper():
@@ -78,6 +80,11 @@ class KuCoinPairUpdaterThread(threading.Thread):
                     to_insert = [list(pair_table.keys())[i],
                                  pair_table[row]]
                     for a, col in enumerate(to_insert):
+                        if a == 1:
+                            col = extensions.separate_decimal_points(col)
+                            after_digits = re.findall('\.\w+', col)
+                            if after_digits:
+                                col = col.replace(after_digits[0], '')
                         gui_table.setItem(i, a, QTableWidgetItem(col))
             else:
                 # ¯\_(ツ)_/¯
@@ -153,15 +160,21 @@ class TradeOgrePairUpdaterThread(threading.Thread):
             if pair_table:
                 gui_table.setRowCount(len(pair_table))
                 gui_table.setColumnCount(2)
+                gui_table.resizeColumnsToContents()
                 keys_list = list(pair_table.keys())
                 if table_name == 'sell':
                     keys_list.reverse()
-                # ¯\_(ツ)_/¯
                 for i, row in enumerate(pair_table):
                     to_insert = [keys_list[i], pair_table[keys_list[i]]]
                     for a, col in enumerate(to_insert):
+                        if a == 1:
+                            col = extensions.separate_decimal_points(col)
+                            after_digits = re.findall('\.\w+', col)
+                            if after_digits:
+                                col = col.replace(after_digits[0], '')
                         gui_table.setItem(i, a, QTableWidgetItem(col))
             else:
+                # ¯\_(ツ)_/¯
                 gui_table.setRowCount(1)
                 gui_table.setColumnCount(1)
                 gui_table.setItem(0, 0, QTableWidgetItem('¯\\_(ツ)_/¯'))

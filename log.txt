@@ -1,2 +1,2 @@
 
-'MainApp' object has no attribute 'quit'
+'QHeaderView' object has no attribute 'setResizeMode'

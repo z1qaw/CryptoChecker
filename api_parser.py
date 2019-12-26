@@ -4,6 +4,7 @@ import time
 from mpmath import mpf, nstr
 
 import api_models
+import extensions
 
 
 class KucoinGrabber:
