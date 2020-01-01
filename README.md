@@ -14,9 +14,10 @@ Check Python 3 installed. Open console and print `python --version`. The andwer 
 
 ### Linux
 1. Run terminal and print:  
-`sudo apt-get install python3`  
-`sudo pip3 install requests pyqt5 python-kucoin pyinstaller`
-`pyinstaller --onedir --noconsole /path/to/main.py`  
+  
+1. `sudo apt-get install python3`  
+2. `sudo pip3 install requests pyqt5 python-kucoin pyinstaller`  
+3. `pyinstaller --onedir --noconsole /path/to/main.py`  
 3. Now build contains in folder `/path/to/dist/main/`. You can run CryptoChecker by `main.exe` file.
 
 
