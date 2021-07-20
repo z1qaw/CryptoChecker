@@ -1,5 +1,11 @@
 # CryptoChecker
 
+## About
+Simply customizable desktop app that allows you to check multiple currencies values in one window (now only from Kucoin and TradeOrge).  
+  
+![2021-07-20 20_50_56-Window](https://user-images.githubusercontent.com/39670960/126371986-9467257a-55d6-45bd-875e-971a22af9fed.png)
+
+
 ## Build and run
 
 ### Windows
